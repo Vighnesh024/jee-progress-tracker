@@ -146,12 +146,9 @@ const ProfileSettings = () => {
         updatedAt: new Date(),
       };
 
-      // Only add photoURL if available
       if (avatarURL && avatarURL.trim() !== "") {
         userData.photoURL = avatarURL;
       }
-
-      console.log("Updating Firestore user doc with:", userData);
 
       await setDoc(userDocRef, userData, { merge: true });
 
@@ -165,99 +162,132 @@ const ProfileSettings = () => {
   if (loading) return <p className="text-center mt-10">Loading...</p>;
 
   return (
-    <div
-      className={`max-w-xl mx-auto p-8 rounded shadow-lg transition-colors duration-500 ease-in-out ${
-        darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
-      }`}
-      style={{ marginLeft: "280px", marginTop: "30px" }}
-    >
-      <h1 className="text-3xl mb-6 font-bold text-center">Your Profile & Settings</h1>
+    <>
+      {/* Fixed Navbar */}
+      <nav
+        className={`fixed top-0 left-0 right-0 h-14 flex items-center px-6 shadow-md z-50 transition-colors duration-500 ${
+          darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
+        }`}
+      >
+        <h1 className="text-xl font-bold">MyApp</h1>
+        {/* Add nav links/buttons here if needed */}
+      </nav>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="flex flex-col items-center">
-          {avatarURL ? (
-            <img
-              src={avatarURL}
-              alt="User Avatar"
-              className="w-32 h-32 rounded-full border-4 border-indigo-500 object-cover mb-4"
-            />
-          ) : (
-            <div className="w-32 h-32 rounded-full border-4 border-gray-300 bg-gray-200 flex items-center justify-center text-gray-400 text-xl mb-4">
-              No Avatar
-            </div>
-          )}
+      {/* Sidebar */}
+      <aside
+        className={`fixed top-14 left-0 w-64 h-[calc(100vh-56px)] bg-gray-200 dark:bg-gray-800 p-6 overflow-auto transition-colors duration-500 ${
+          darkMode ? "text-white" : "text-gray-900"
+        }`}
+      >
+        <h2 className="mb-6 font-semibold text-lg">Menu</h2>
+        <ul>
+          <li className="mb-4 hover:text-indigo-600 cursor-pointer">Profile Settings</li>
+          <li className="mb-4 hover:text-indigo-600 cursor-pointer">Account</li>
+          <li className="mb-4 hover:text-indigo-600 cursor-pointer">Notifications</li>
+          <li className="mb-4 hover:text-indigo-600 cursor-pointer">Security</li>
+          {/* Add more sidebar links here */}
+        </ul>
+      </aside>
 
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleAvatarChange}
-            disabled={uploading}
-            className="mb-4 block w-full text-sm text-gray-500
-            file:mr-4 file:py-2 file:px-4
-            file:rounded file:border-0
-            file:text-sm file:font-semibold
-            file:bg-indigo-50 file:text-indigo-700
-            hover:file:bg-indigo-100
-            dark:file:bg-indigo-700 dark:file:text-indigo-100
-            dark:hover:file:bg-indigo-600"
-          />
+      {/* Main Content */}
+      <main
+        className={`max-w-xl mx-auto p-8 rounded shadow-lg transition-colors duration-500 ease-in-out mt-20 ${
+          darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
+        }`}
+        style={{ marginLeft: "280px" }}
+      >
+        <h1 className="text-3xl mb-6 font-bold text-center">Your Profile & Settings</h1>
 
-          {uploading && (
-            <div className="mb-4 w-full">
-              <p className="text-indigo-600 font-semibold mb-1">
-                Uploading: {progress.toFixed(0)}%
-              </p>
-              <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                <div
-                  className="bg-indigo-600 h-3 rounded-full transition-all duration-300"
-                  style={{ width: `${progress}%` }}
-                ></div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="flex flex-col items-center">
+            {avatarURL ? (
+              <img
+                src={avatarURL}
+                alt="User Avatar"
+                className="w-32 h-32 rounded-full border-4 border-indigo-500 object-cover mb-4"
+              />
+            ) : (
+              <div className="w-32 h-32 rounded-full border-4 border-gray-300 bg-gray-200 flex items-center justify-center text-gray-400 text-xl mb-4">
+                No Avatar
               </div>
-            </div>
-          )}
-        </div>
+            )}
 
-        <div>
-          <label className="block mb-2 font-semibold">Email</label>
-          <input
-            type="email"
-            value={user.email || ""}
-            disabled
-            className={`w-full p-3 rounded border ${
-              darkMode
-                ? "border-gray-700 bg-gray-800 text-white"
-                : "border-gray-300 bg-white text-gray-900"
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarChange}
+              disabled={uploading}
+              className="mb-4 block w-full text-sm text-gray-500
+                file:mr-4 file:py-2 file:px-4
+                file:rounded file:border-0
+                file:text-sm file:font-semibold
+                file:bg-indigo-50 file:text-indigo-700
+                hover:file:bg-indigo-100
+                dark:file:bg-indigo-700 dark:file:text-indigo-100
+                dark:hover:file:bg-indigo-600"
+            />
+
+            {uploading && (
+              <div className="mb-4 w-full">
+                <p className="text-indigo-600 font-semibold mb-1">
+                  Uploading: {progress.toFixed(0)}%
+                </p>
+                <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                  <div
+                    className="bg-indigo-600 h-3 rounded-full transition-all duration-300"
+                    style={{ width: `${progress}%` }}
+                  ></div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div>
+            <label className="block mb-2 font-semibold">Email</label>
+            <input
+              type="email"
+              value={user.email || ""}
+              disabled
+              className={`w-full p-3 rounded border ${
+                darkMode
+                  ? "border-gray-700 bg-gray-800 text-white"
+                  : "border-gray-300 bg-white text-gray-900"
+              }`}
+            />
+          </div>
+
+          <div>
+            <label className="block mb-2 font-semibold">Display Name</label>
+            <input
+              type="text"
+              value={displayName}
+              onChange={(e) => setDisplayName(e.target.value)}
+              placeholder="Enter your name"
+              className={`w-full p-3 rounded border focus:outline-none focus:ring-2 ${
+                darkMode
+                  ? "border-gray-700 bg-gray-800 text-white focus:ring-brandBlue"
+                  : "border-gray-300 bg-white text-gray-900 focus:ring-indigo-500"
+              }`}
+            />
+          </div>
+
+          {error && <p className="text-red-500 font-medium">{error}</p>}
+          {success && <p className="text-green-600 font-medium">{success}</p>}
+
+          <button
+            type="submit"
+            disabled={uploading}
+            className={`w-full py-3 rounded font-semibold text-white transition-colors duration-300 ${
+              uploading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-indigo-600 hover:bg-indigo-700"
             }`}
-          />
-        </div>
-
-        <div>
-          <label className="block mb-2 font-semibold">Display Name</label>
-          <input
-            type="text"
-            value={displayName}
-            onChange={(e) => setDisplayName(e.target.value)}
-            placeholder="Enter your name"
-            className={`w-full p-3 rounded border focus:outline-none focus:ring-2 ${
-              darkMode
-                ? "border-gray-700 bg-gray-800 text-white focus:ring-brandBlue"
-                : "border-gray-300 bg-white text-gray-900 focus:ring-indigo-500"
-            }`}
-          />
-        </div>
-
-        {error && <p className="text-red-500 font-medium">{error}</p>}
-        {success && <p className="text-green-500 font-medium">{success}</p>}
-
-        <button
-          type="submit"
-          disabled={uploading}
-          className="px-6 py-3 bg-brandBlue text-white rounded hover:bg-indigo-700 transition disabled:opacity-50"
-        >
-          Save Profile
-        </button>
-      </form>
-    </div>
+          >
+            Update Profile
+          </button>
+        </form>
+      </main>
+    </>
   );
 };
 
